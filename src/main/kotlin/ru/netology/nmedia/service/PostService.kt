@@ -26,15 +26,16 @@ class PostService(private val repository: PostRepository) {
             PostEntity.fromDto(
                 dto.copy(
                     likes = 0,
-                    likedByMe = false,
-                    published = SimpleDateFormat("dd MMMM yyyy hh:mm",
-                            Locale.getDefault()).format(Date()))
-
+                    likedByMe = false
             )
-        )
+        ))
         .let {
             it.content = dto.content
-            if (it.id == 0L) repository.save(it)
+            it.published = dto.published
+            if (it.id != 0L){
+                it.published = SimpleDateFormat("dd MMMM yyyy HH:mm 'Corrected'",
+                    Locale.getDefault()).format(Date())}
+            repository.save(it)
             it
         }.toDto()
 
